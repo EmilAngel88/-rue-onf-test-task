@@ -1,8 +1,6 @@
 <template>
   <div class="shaft">
-    <div v-for="i in floors" :key="i" class="shaft__floor">
-      {{ targetFloor }}
-    </div>
+    <div v-for="i in floors" :key="i" class="shaft__floor"></div>
     <ElevatorComponents :position="`absolute`" :height="`100px`" />
   </div>
 </template>
@@ -18,8 +16,6 @@ export default {
   data() {
     return {
       floors,
-      targetFloor: "0",
-      lengthLine: "",
     };
   },
   computed: {

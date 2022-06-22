@@ -25,10 +25,8 @@ export default {
   },
   data() {
     return {
-      lengthLine: "",
-      bottom: "0",
       triggered: true,
-      speed: "5",
+      speed: "",
     };
   },
   computed: {
@@ -39,17 +37,23 @@ export default {
       return this.getCallLine.length ? this.getCallLine[0] : "1";
     },
   },
+  methods: {
+    speedTime() {
+      this.speed = Math.abs(this.getCallLine[1] - this.getCallLine[0]);
+    },
+  },
   watch: {
     getCallLine() {
       if (this.getCallLine.length > 1 && this.triggered) {
         this.triggered = false;
-        this.speed = Math.abs(this.getCallLine[1] - this.getCallLine[0]);
+        this.speedTime();
         this.$store.commit("delCall");
         let timer = setInterval(() => {
           if (this.getCallLine.length == 1) {
             clearTimeout(timer);
             this.triggered = true;
           } else {
+            this.speedTime();
             this.$store.commit("delCall");
           }
         }, this.getCallLine[0] * 1000 + 3000);
@@ -60,7 +64,6 @@ export default {
     },
   },
   mounted() {
-    this.lengthLine = this.getCallLine.length;
     this.$store.commit("setCall", 1);
   },
 };
@@ -73,6 +76,5 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  // transition: all 1s linear;
 }
 </style>
