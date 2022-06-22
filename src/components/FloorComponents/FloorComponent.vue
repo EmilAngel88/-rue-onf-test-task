@@ -1,15 +1,15 @@
 <template>
   <div class="floor" :style="{ height: height }">
     <div class="floor__number">Этаж: {{ floor }}</div>
-    <LiftButton @click.native="on" :mt="`5px`" />
+    <ElevatorButton :floor="floor" @click.native="addToLine" :mt="`5px`" />
   </div>
 </template>
 
 <script>
-import LiftButton from "@/components/FloorComponents/LiftButton.vue";
+import ElevatorButton from "@/components/FloorComponents/ElevatorButton.vue";
 export default {
   components: {
-    LiftButton,
+    ElevatorButton,
   },
   props: {
     floor: {
@@ -22,8 +22,8 @@ export default {
     },
   },
   methods: {
-    on() {
-      this.$emit("addTargetFloor", this.floor);
+    addToLine() {
+      this.$store.commit("setCall", this.floor);
     },
   },
 };

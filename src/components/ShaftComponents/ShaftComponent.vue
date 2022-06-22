@@ -1,23 +1,32 @@
 <template>
   <div class="shaft">
-    <div v-for="i in 5" :key="i" class="shaft__floor"></div>
-    <ElevatorComponents
-      :position="`absolute`"
-      :bottom="`0px`"
-      :height="`100px`"
-    />
+    <div v-for="i in floors" :key="i" class="shaft__floor">
+      {{ targetFloor }}
+    </div>
+    <ElevatorComponents :position="`absolute`" :height="`100px`" />
   </div>
 </template>
 
 <script>
+import floors from "@/config/index";
+import { mapGetters } from "vuex";
 import ElevatorComponents from "@/components/ShaftComponents/ElevatorComponents.vue";
 export default {
   components: {
     ElevatorComponents,
   },
+  data() {
+    return {
+      floors,
+      targetFloor: "0",
+      lengthLine: "",
+    };
+  },
+  computed: {
+    ...mapGetters({ getCallLine: "getCallLine" }),
+  },
 };
 </script>
-
 <style lang="scss" scoped>
 .shaft {
   width: 80px;
