@@ -58,9 +58,6 @@ export default {
           }
         }, this.getCallLine[0] * 1000 + 3000);
       }
-      if (this.getCallLine.length) {
-        this.$store.commit("setElevatorPosition", this.getCallLine[0]);
-      }
     },
   },
   mounted() {
