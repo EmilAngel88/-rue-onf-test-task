@@ -1,58 +1,65 @@
 <template>
   <div
-    :style="{ 'margin-top': mt, 'margin-left': ml }"
-    @mousedown="isButtonDown = !isButtonDown"
-    @mouseup="isButtonDown = !isButtonDown"
-    :class="{
-      'lift-button__pressing': isButtonDown,
-      'lift-button__choised': isFloorChoised,
-    }"
-    class="lift-button"
+      @click="$emit('click')"
+      @mousedown="isButtonDown = !isButtonDown"
+      @mouseup="isButtonDown = !isButtonDown"
+      :class="[ $style.liftButton, {
+        [$style.pressing]: isButtonDown,
+        [$style.btnChoised]: isFloorChoised,
+      }]"
   >
     <div
-      class="lift-button__center"
-      :class="{
-        'lift-button__center-choised': isFloorChoised,
-      }"
+      :class="[ $style.center, {
+        [$style.centerChoised]: isFloorChoised,
+      }]"
     ></div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+
+import { ElevatorAsObject } from '@/assets/fsm';
+
 export default {
   props: {
-    mt: {
-      type: String,
-      default: "",
-    },
-    ml: {
-      type: String,
-      default: "",
-    },
     floor: {
       type: Number,
       default: 0,
     },
   },
+
   data() {
     return {
       isButtonDown: false,
     };
   },
+
   computed: {
-    ...mapGetters({
-      getCallLine: "getCallLine",
-    }),
+    currentState() {
+      return ElevatorAsObject.state[ElevatorAsObject.state.length - 1];
+    },
+
+    isElevatorMoving() {
+      return this.currentState.nextFloor === this.floor;
+    },
+
+    isElevatorAwaiting() {
+      return this.currentState.isWaiting && this.currentState.floor === this.floor;
+    },
+
+    isFloorWasCalled() {
+      return ElevatorAsObject.pressedButtons.includes(this.floor);
+    },
+
     isFloorChoised() {
-      return this.getCallLine.includes(this.floor) ? 1 : 0;
+      return Boolean(this.isFloorWasCalled || this.isElevatorMoving || this.isElevatorAwaiting);
     },
   },
 };
 </script>
 
-<style lang="scss" scoped>
-.lift-button {
+<style lang="scss" module>
+.liftButton {
   width: 20px;
   height: 20px;
   border: 1px solid rgba(65, 149, 165, 0.9);
@@ -61,25 +68,25 @@ export default {
   align-items: center;
   cursor: pointer;
   transition: all 0.1s;
+}
 
-  &__choised {
-    border: 1px solid rgba(231, 135, 55, 0.9);
-  }
+.btnChoised {
+  border: 1px solid rgba(231, 135, 55, 0.9);
+}
 
-  &__center {
-    width: 10px;
-    height: 10px;
-    border-radius: 10px;
-    background-color: rgba(65, 149, 165, 0.9);
-    transition: all 0.1s;
+.pressing {
+  background: #ccc;
+}
 
-    &-choised {
-      background-color: rgba(231, 135, 55, 0.9);
-    }
-  }
+.center {
+  width: 10px;
+  height: 10px;
+  border-radius: 10px;
+  background-color: rgba(65, 149, 165, 0.9);
+  transition: all 0.1s;
+}
 
-  &__pressing {
-    background: #ccc;
-  }
+.centerChoised {
+  background-color: rgba(231, 135, 55, 0.9);
 }
 </style>

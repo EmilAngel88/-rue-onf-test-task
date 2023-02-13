@@ -4,5 +4,20 @@
   </div>
 </template>
 
-<style lang="scss">
-</style>
+<script>
+import { ElevatorAsObject } from './assets/fsm';
+
+export default {
+  methods:{
+    stateUpdateHandler (state) {
+      console.log(state);
+    },
+  },
+
+  mounted() {
+    ElevatorAsObject.init(this.stateUpdateHandler);
+
+    console.log(ElevatorAsObject.state[ElevatorAsObject.state.length - 1]);
+  }
+};
+</script>
